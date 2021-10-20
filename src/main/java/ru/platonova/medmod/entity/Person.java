@@ -28,6 +28,9 @@ public abstract class Person {
     private String patronymic;
 
     @Column
+    private String gender;
+
+    @Column
     private String email;
 
     @Column

@@ -1,6 +1,7 @@
 package ru.platonova.medmod.entity;
 
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class SessionCategory {
 
     @Column
     private String name;
-    // TODO: 04.10.2021 Json-строка для структуры приема/анализа/процедуры
-//    @Column
-//    private json structure;
+
+    @Column(name = "structure")
+    private String structure;
 }

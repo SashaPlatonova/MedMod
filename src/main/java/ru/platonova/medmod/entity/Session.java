@@ -1,10 +1,10 @@
 package ru.platonova.medmod.entity;
 
 
+import com.google.gson.JsonObject;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Date;
 
 @Entity
 @Table(name = "session")
@@ -24,8 +24,20 @@ public class Session {
     private String sessionName;
 
     @Column
-    private Date date;
+    private int office;
 
-    @Column
-    private String documentName;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private SessionCategory category;
+
+    @ManyToOne
+    @JoinColumn(name = "diagnosis_id")
+    private Diagnosis diagnosis;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    @Column(name = "conclusion")
+    private String conclusion;
 }

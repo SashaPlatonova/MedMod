@@ -22,6 +22,9 @@ public class Diagnosis {
     @Column
     private String name;
 
+    @Column
+    private String code;
+
     @ManyToOne
     @JoinColumn(name = "standart")
     private DocStandart standart;

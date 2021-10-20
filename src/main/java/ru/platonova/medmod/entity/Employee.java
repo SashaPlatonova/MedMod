@@ -22,8 +22,14 @@ public class Employee extends Person{
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column
     private String experience;
+
+    @Column
+    private String photo;
 
     @Column
     private String education;
