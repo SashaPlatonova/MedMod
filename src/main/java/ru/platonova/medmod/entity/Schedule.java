@@ -19,7 +19,7 @@ public class Schedule {
     @Id
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Date date;
 
     @Column

@@ -20,10 +20,10 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String sessionName;
 
-    @Column
+    @Column(nullable = false)
     private int office;
 
     @ManyToOne

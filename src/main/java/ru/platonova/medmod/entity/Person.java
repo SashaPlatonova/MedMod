@@ -18,24 +18,24 @@ public abstract class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String surName;
 
     @Column
     private String patronymic;
 
-    @Column
+    @Column(nullable = false)
     private String gender;
 
     @Column
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String phoneNumber;
 
-    @Column
+    @Column(nullable = false)
     private Date birthDate;
 }

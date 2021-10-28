@@ -19,9 +19,9 @@ public class SessionCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "structure")
+    @Column(name = "structure", nullable = false)
     private String structure;
 }

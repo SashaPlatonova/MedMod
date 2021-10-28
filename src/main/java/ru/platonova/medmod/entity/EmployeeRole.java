@@ -20,7 +20,7 @@ public class EmployeeRole {
     @Column
     private Long roleId;
 
-    @Column
+    @Column(nullable = false)
     private String roleName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
