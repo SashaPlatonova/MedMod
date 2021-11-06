@@ -24,13 +24,23 @@ public class SessionDTO {
     }
 
     public static SessionDTO toModel(Session session){
-        return new SessionDTO(
-                session.getSessionName(),
-                session.getOffice(),
-                SessionCategoryDTO.toModel(session.getCategory()),
-                DiagnosisDTO.toModel(session.getDiagnosis()),
-                PatientDTO.toModel(session.getPatient()),
-                toJson(session.getConclusion())
-        );
+        SessionDTO model = new SessionDTO();
+        model.setSessionName(session.getSessionName());
+        model.setCategory(SessionCategoryDTO.toModel(session.getCategory()));
+        model.setOffice(session.getOffice());
+        if(session.getDiagnosis()!=null){
+            model.setDiagnosis(DiagnosisDTO.toModel(session.getDiagnosis()));
+        }
+        else {
+            model.setDiagnosis(null);
+        }
+        if(session.getPatient()!=null){
+            model.setPatient(PatientDTO.toModel(session.getPatient()));
+        }
+        else {
+            model.setPatient(null);
+        }
+        model.setConclusion(toJson(session.getConclusion()));
+        return model;
     }
 }

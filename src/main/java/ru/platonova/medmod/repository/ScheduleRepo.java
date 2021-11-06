@@ -11,6 +11,12 @@ public interface ScheduleRepo extends CrudRepository<Schedule, Long> {
     List<Schedule> findAllByDate(Date date);
 
     @Query("select sch from Schedule sch join fetch Employee emp on" +
-            "(sch.session.id=emp.id) where emp.surName =:surName")
+            "(sch.employee.id=emp.id) where emp.surName =:surName")
     List<Schedule> findAllByEmployee(String surName);
+
+    @Query(value = "select * from schedule inner join employee " +
+            "on schedule.employee_id = employee.id where employee.sur_name=:surName and " +
+            "(SELECT EXTRACT(WEEK FROM (select current_date))) in  (SELECT EXTRACT(WEEK FROM (schedule.date)));",
+            nativeQuery = true)
+    List<Schedule> findAllToWeek(String surName);
 }

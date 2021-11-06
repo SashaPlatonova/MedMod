@@ -26,4 +26,23 @@ public class ScheduleService {
         }
         return scheduleDTOS;
     }
+
+    public List<ScheduleDTO> getByEmployee(String surName){
+        List<Schedule> schedules = scheduleRepo.findAllByEmployee(surName);
+        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            scheduleDTOS.add(ScheduleDTO.toModel(schedule));
+        }
+        return scheduleDTOS;
+    }
+
+    public List<ScheduleDTO> getForWeek(String surName){
+
+        List<Schedule> schedules = scheduleRepo.findAllToWeek(surName);
+        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            scheduleDTOS.add(ScheduleDTO.toModel(schedule));
+        }
+        return scheduleDTOS;
+    }
 }
