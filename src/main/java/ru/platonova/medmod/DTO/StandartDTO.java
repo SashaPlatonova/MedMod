@@ -9,9 +9,10 @@ import ru.platonova.medmod.entity.DocStandart;
 @Setter
 @ToString
 public class StandartDTO {
+    private Long id;
     private String docName;
 
     public static StandartDTO toModel(DocStandart standart){
-        return new StandartDTO(standart.getDocName());
+        return new StandartDTO(standart.getId(), standart.getDocName());
     }
 }

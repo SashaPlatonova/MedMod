@@ -1,3 +1,4 @@
+
 package ru.platonova.medmod.repository;
 
 import org.springframework.data.jpa.repository.Query;
@@ -8,9 +9,15 @@ import java.util.List;
 
 public interface SessionRepo extends CrudRepository<Session, Long> {
 
+    @Query(value = """
+    select * from session inner join schedule s on session.id = s.session_id
+    where s.id :=id
+    """, nativeQuery = true)
+    Session findByScheduleId(Long id);
+
     @Query(value = "select * from session join patient p on session.patient_id = p.id" +
-            " where p.snils =:snils", nativeQuery = true)
-    List<Session> findByPatient(String snils);
+            " where p.id =:id", nativeQuery = true)
+    List<Session> findByPatient(Long id);
 
 
     @Query(value = "select * from session join schedule s on session.id = s.session_id " +

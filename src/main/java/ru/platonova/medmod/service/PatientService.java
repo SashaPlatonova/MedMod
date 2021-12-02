@@ -10,10 +10,23 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class PatientService {
-    private PatientRepo patientRepo;
+    private final PatientRepo patientRepo;
 
     public PatientService(PatientRepo patientRepo) {
         this.patientRepo = patientRepo;
+    }
+
+    public List<PatientDTO> getPatientByEmployeeId(Long id){
+        List<Patient> patients = patientRepo.findAllByEmployeeId(id);
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        for (Patient patient : patients) {
+            patientDTOS.add(PatientDTO.toModel(patient));
+        }
+        return patientDTOS;
+    }
+
+    public PatientDTO getById(Long id){
+        return PatientDTO.toModel(patientRepo.findPatientById(id));
     }
 
     public List<PatientDTO> getPatientListByEmployee(String employee){

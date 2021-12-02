@@ -11,6 +11,8 @@ import ru.platonova.medmod.entity.Session;
 @AllArgsConstructor
 @ToString
 public class SessionDTO {
+
+    private Long id;
     private String sessionName;
     private int office;
     private SessionCategoryDTO category;
@@ -25,6 +27,7 @@ public class SessionDTO {
 
     public static SessionDTO toModel(Session session){
         SessionDTO model = new SessionDTO();
+        model.setId(session.getId());
         model.setSessionName(session.getSessionName());
         model.setCategory(SessionCategoryDTO.toModel(session.getCategory()));
         model.setOffice(session.getOffice());

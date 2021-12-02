@@ -5,6 +5,7 @@ import lombok.*;
 import ru.platonova.medmod.DTO.EmployeeDTO;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 
 @SuppressWarnings("PMD")
@@ -45,6 +46,24 @@ public class Employee extends Person{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId")
     private EmployeeRole roleId;
+
+
+    public Employee(Long id, String name, String surName, String patronymic, String gender,
+                    String email, String phoneNumber, Date birthDate, Long personnelNum,
+                    String username, String password, String experience, Department department,
+                    String qualification, String photo, String education, EmployeeRole roleId) {
+        super(id, name, surName, patronymic, gender, email, phoneNumber, birthDate);
+        this.personnelNum = personnelNum;
+        this.username = username;
+        this.password = password;
+        this.experience = experience;
+        this.department = department;
+        this.qualification = qualification;
+        this.photo = photo;
+        this.education = education;
+        this.roleId = roleId;
+    }
+
 
 
     @Override

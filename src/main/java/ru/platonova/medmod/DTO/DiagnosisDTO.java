@@ -10,12 +10,13 @@ import ru.platonova.medmod.entity.Diagnosis;
 @Setter
 @ToString
 public class DiagnosisDTO {
+    private Long id;
     private String name;
     private String code;
     private StandartDTO standart;
 
     public static DiagnosisDTO toModel(Diagnosis diagnosis){
-        return new DiagnosisDTO(
+        return new DiagnosisDTO(diagnosis.getId(),
                 diagnosis.getName(),
                 diagnosis.getCode(),
                 StandartDTO.toModel(diagnosis.getStandart())

@@ -34,14 +34,25 @@ public class MainController {
         return employeeService.getEmployeeBySurName(surname);
     }
 
+    @GetMapping("employee/find/id")
+    public EmployeeDTO getEmployeeByID(@RequestParam Long id){
+        return employeeService.getEmployeeById(id);
+    }
+
     @GetMapping("employee/find/department")
     public List<EmployeeDTO> getEmployByDepartment(@RequestParam String department){
         return employeeService.getEmployeeByDepartment(department);
     }
 
+    @PutMapping("employee/update")
+    public boolean updateEmployee(@RequestBody EmployeeDTO model){
+        return employeeService.updateEmployee(model);
+    }
+
     @GetMapping("schedule/find/day")
-    public List<ScheduleDTO> scheduleToDay(@RequestParam String date){
-        return scheduleService.getForDay(date);
+    public List<ScheduleDTO> scheduleToDay(@RequestParam String date,
+                                           @RequestParam Long id){
+        return scheduleService.getForDay(date, id);
     }
 
     @GetMapping("schedule/find/employee")
@@ -54,6 +65,16 @@ public class MainController {
         return scheduleService.getForWeek(employee);
     }
 
+    @GetMapping("schedule/find/last/id")
+    public ScheduleDTO scheduleLast(@RequestParam Long id){
+        return scheduleService.getLast(id);
+    }
+
+    @GetMapping("schedule/find/patient/id")
+    public List<ScheduleDTO> scheduleByPatient(@RequestParam Long id){
+        return scheduleService.getByPatient(id);
+    }
+
     @GetMapping("patient/find/fio")
     public PatientDTO findPatient(@RequestParam String name,
                                   @RequestParam String surName,
@@ -61,14 +82,24 @@ public class MainController {
         return patientService.getPatient(name, surName, patronymic);
     }
 
-    @GetMapping("patient/find")
+    @GetMapping("patient/find/id")
+    public PatientDTO findPatientById(@RequestParam Long id){
+        return patientService.getById(id);
+    }
+
+    @GetMapping("patient/find/employee/id")
+    public List<PatientDTO> findPatientByEmployeeId(@RequestParam Long id){
+        return patientService.getPatientByEmployeeId(id);
+    }
+
+    @GetMapping("patient/find/employee/name")
     public List<PatientDTO> findPatientByEmployee(@RequestParam String employee){
         return patientService.getPatientListByEmployee(employee);
     }
 
     @GetMapping("document/find/patient")
-    public List<SessionDTO> findDocsByPatient(@RequestParam String snils){
-        return sessionService.getByPatient(snils);
+    public List<SessionDTO> findDocsByPatient(@RequestParam Long id){
+        return sessionService.getByPatient(id);
     }
 
     @GetMapping("document/find/employee")
@@ -76,7 +107,7 @@ public class MainController {
         return sessionService.getByEmployee(surName);
     }
 
-    @GetMapping("documant/find/category")
+    @GetMapping("document/find/category")
     public List<SessionDTO> findDocsByCategory(@RequestParam String category){
         return sessionService.getByCategory(category);
     }

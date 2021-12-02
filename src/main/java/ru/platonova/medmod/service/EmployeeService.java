@@ -13,10 +13,14 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    private EmployeeRepo employeeRepo;
+    private final EmployeeRepo employeeRepo;
 
     public EmployeeService(EmployeeRepo employeeRepo) {
         this.employeeRepo = employeeRepo;
+    }
+
+    public EmployeeDTO getEmployeeById(Long id){
+        return EmployeeDTO.toModel(employeeRepo.findEmployeeById(id));
     }
 
     public List<EmployeeDTO> getEmployeeBySurName(String surName){
@@ -37,5 +41,15 @@ public class EmployeeService {
         }
 
         return employeeDTOS;
+    }
+
+    public boolean updateEmployee(EmployeeDTO model){
+        Employee emp = employeeRepo.findEmployeeById(model.getId());
+        if(emp==null){
+            return false;
+        }
+        emp = EmployeeDTO.toEntity(model);
+        employeeRepo.save(emp);
+        return true;
     }
 }

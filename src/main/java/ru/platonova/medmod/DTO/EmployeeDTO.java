@@ -14,6 +14,7 @@ import java.sql.Date;
 @ToString
 public class EmployeeDTO {
 
+    private Long id;
     private Long personnelNum;
     private String name;
     private String surName;
@@ -23,6 +24,7 @@ public class EmployeeDTO {
     private String phoneNumber;
     private Date birthDate;
     private String username;
+    private String password;
     private String experience;
     private DepartmentDTO department;
     private String qualification;
@@ -30,9 +32,32 @@ public class EmployeeDTO {
     private String photo;
     private RoleDTO roleId;
 
+    public static Employee toEntity(EmployeeDTO model){
+        return new Employee(
+                model.getId(),
+                model.getName(),
+                model.getSurName(),
+                model.getPatronymic(),
+                model.getGender(),
+                model.getEmail(),
+                model.getPhoneNumber(),
+                model.getBirthDate(),
+                model.getPersonnelNum(),
+                model.getUsername(),
+                model.getPassword(),
+                model.getExperience(),
+                DepartmentDTO.toEntity(model.getDepartment()),
+                model.getQualification(),
+                model.getEducation(),
+                model.getPhoto(),
+                RoleDTO.toEntity(model.getRoleId())
+        );
+    }
+
     public static EmployeeDTO toModel(Employee employee){
-        return new EmployeeDTO(employee.getPersonnelNum(), employee.getName(), employee.getSurName(), employee.getPatronymic(),
+        return new EmployeeDTO(employee.getId(), employee.getPersonnelNum(), employee.getName(), employee.getSurName(), employee.getPatronymic(),
                 employee.getGender(), employee.getEmail(), employee.getPhoneNumber(), employee.getBirthDate(), employee.getUsername(),
+                employee.getPassword(),
                 employee.getExperience(),
                 DepartmentDTO.toModel(employee.getDepartment()),
                 employee.getQualification(), employee.getEducation(),

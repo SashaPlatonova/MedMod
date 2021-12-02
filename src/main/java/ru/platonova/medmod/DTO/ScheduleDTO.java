@@ -12,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class ScheduleDTO {
+    private Long id;
     private Date date;
     private Time time;
     private EmployeeDTO employee;
@@ -19,6 +20,7 @@ public class ScheduleDTO {
 
     public static ScheduleDTO toModel(Schedule schedule){
         ScheduleDTO model = new ScheduleDTO();
+        model.setId(schedule.getId());
         model.setDate(schedule.getDate());
         model.setTime(schedule.getTime());
         model.setEmployee(EmployeeDTO.toModel(schedule.getEmployee()));

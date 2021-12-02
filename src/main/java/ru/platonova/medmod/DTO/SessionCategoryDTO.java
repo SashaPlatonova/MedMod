@@ -1,7 +1,12 @@
 package ru.platonova.medmod.DTO;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import lombok.*;
 import ru.platonova.medmod.entity.SessionCategory;
+
+import java.io.StringReader;
 
 @Getter
 @Setter
@@ -9,13 +14,21 @@ import ru.platonova.medmod.entity.SessionCategory;
 @AllArgsConstructor
 @ToString
 public class SessionCategoryDTO {
+    private Long id;
     private String name;
-    private String structure;
+    private JsonObject structure;
+
+    public static JsonObject toJson(String structure){
+        Gson g = new Gson();
+//        JsonReader reader = new JsonReader(new StringReader(structure));
+//        reader.setLenient(true);
+        return g.fromJson(structure, JsonObject.class);
+    }
 
     public static SessionCategoryDTO toModel(SessionCategory category){
-        return new SessionCategoryDTO(
+        return new SessionCategoryDTO(category.getId(),
                 category.getName(),
-                category.getStructure()
+                toJson(category.getStructure())
         );
     }
 

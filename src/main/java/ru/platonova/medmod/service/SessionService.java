@@ -11,15 +11,15 @@ import java.util.List;
 @Service
 public class SessionService {
 
-    private SessionRepo sessionRepo;
+    private final SessionRepo sessionRepo;
 
     public SessionService(SessionRepo sessionRepo) {
         this.sessionRepo = sessionRepo;
     }
 
-    public List<SessionDTO> getByPatient(String snils){
+    public List<SessionDTO> getByPatient(Long id){
         List<SessionDTO> models = new ArrayList<>();
-        List<Session> sessions = sessionRepo.findByPatient(snils);
+        List<Session> sessions = sessionRepo.findByPatient(id);
         for (Session session : sessions) {
             models.add(SessionDTO.toModel(session));
         }
@@ -42,5 +42,9 @@ public class SessionService {
             models.add(SessionDTO.toModel(session));
         }
         return models;
+    }
+
+    public SessionDTO getBySchedule(Long id){
+        return SessionDTO.toModel(sessionRepo.findByScheduleId(id));
     }
 }

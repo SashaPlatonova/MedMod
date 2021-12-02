@@ -17,13 +17,13 @@ import java.util.List;
 public class EmployeeRole {
 
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roleId;
 
     @Column(nullable = false)
     private String roleName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
-    private List<Employee> employees;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
+//    private List<Employee> employees;
 
 }
