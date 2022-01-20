@@ -1,6 +1,7 @@
 package ru.platonova.medmod.DTO;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import lombok.*;
@@ -16,13 +17,11 @@ import java.io.StringReader;
 public class SessionCategoryDTO {
     private Long id;
     private String name;
-    private JsonObject structure;
+    private JsonArray structure;
 
-    public static JsonObject toJson(String structure){
+    public static JsonArray toJson(String structure){
         Gson g = new Gson();
-//        JsonReader reader = new JsonReader(new StringReader(structure));
-//        reader.setLenient(true);
-        return g.fromJson(structure, JsonObject.class);
+        return g.fromJson(structure, JsonArray.class);
     }
 
     public static SessionCategoryDTO toModel(SessionCategory category){

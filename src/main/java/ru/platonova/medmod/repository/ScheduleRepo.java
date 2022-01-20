@@ -27,17 +27,17 @@ public interface ScheduleRepo extends CrudRepository<Schedule, Long> {
     List<Schedule> findAllToWeek(String surName);
 
     @Query(value = """
-        select * from schedule inner join session s on s.id = schedule.session_id 
-        inner join diagnosis d on d.id = s.diagnosis_id inner join patient p on p.id = s.patient_id
-        where patient_id =:id order by date desc limit 1;
+        select * from schedule inner join session s on s.id = schedule.session_id\s
+                inner join diagnosis d on d.id = s.diagnosis_id inner join patient p on p.id = s.patient_id
+                where employee_id =:id order by date desc;
     """,
     nativeQuery = true)
-    Schedule findLastByPatient(Long id);
+    List<Schedule> findLastByEmployee(Long id);
 
     @Query(value = """
         select * from schedule inner join session s on s.id = schedule.session_id 
      inner join patient p on p.id = s.patient_id
-        where patient_id =:id
+        where patient_id =:id order by date desc
     """,
             nativeQuery = true)
     List<Schedule> findByPatient(Long id);

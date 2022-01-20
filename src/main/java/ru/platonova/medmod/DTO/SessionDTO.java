@@ -1,6 +1,7 @@
 package ru.platonova.medmod.DTO;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.*;
 import ru.platonova.medmod.entity.Session;
@@ -18,11 +19,11 @@ public class SessionDTO {
     private SessionCategoryDTO category;
     private DiagnosisDTO diagnosis;
     private PatientDTO patient;
-    private JsonObject conclusion;
+    private JsonArray conclusion;
 
-    public static JsonObject toJson(String conclusion){
+    public static JsonArray toJson(String conclusion){
         Gson g = new Gson();
-        return g.fromJson(conclusion, JsonObject.class);
+        return g.fromJson(conclusion, JsonArray.class);
     }
 
     public static SessionDTO toModel(Session session){

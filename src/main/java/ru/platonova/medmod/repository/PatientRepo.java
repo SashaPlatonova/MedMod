@@ -5,7 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import ru.platonova.medmod.entity.Patient;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PatientRepo extends CrudRepository<Patient, Long> {
 
