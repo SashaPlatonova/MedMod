@@ -38,4 +38,12 @@ public abstract class Person {
 
     @Column(nullable = false)
     private Date birthDate;
+
+    public Person(String name, String surName, String gender, String phoneNumber, Date birthDate) {
+        this.name = name;
+        this.surName = surName;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
 }

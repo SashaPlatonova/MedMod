@@ -48,6 +48,7 @@ public class EmployeeService {
         if(emp==null){
             return false;
         }
+        System.out.println(emp.getBirthDate());
         emp = EmployeeDTO.toEntity(model);
         employeeRepo.save(emp);
         return true;

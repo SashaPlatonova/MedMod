@@ -34,7 +34,7 @@ public class Employee extends Person{
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @Column(nullable = false)
+    @Column
     private String qualification;
 
     @Column
@@ -62,6 +62,14 @@ public class Employee extends Person{
         this.photo = photo;
         this.education = education;
         this.roleId = roleId;
+    }
+
+    public Employee(String username, String password, Long personnel,
+                    String name, String surName, String phone, String gender, Date birthDate){
+        super(name, surName, gender, phone, birthDate);
+        this.username = username;
+        this.password = password;
+        this.personnelNum = personnel;
     }
 
 

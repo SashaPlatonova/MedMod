@@ -1,5 +1,7 @@
 package ru.platonova.medmod.DTO;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.*;
 import ru.platonova.medmod.entity.Department;
 import ru.platonova.medmod.entity.Employee;
@@ -48,8 +50,8 @@ public class EmployeeDTO {
                 model.getExperience(),
                 DepartmentDTO.toEntity(model.getDepartment()),
                 model.getQualification(),
-                model.getEducation(),
                 model.getPhoto(),
+                model.getEducation(),
                 RoleDTO.toEntity(model.getRoleId())
         );
     }
