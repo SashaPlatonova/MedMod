@@ -38,4 +38,19 @@ public class PatientDTO {
                 patient.getInsurancePolicy()
         );
     }
+
+    public static Patient toEntity(PatientDTO dto){
+        return new Patient(dto.getId(),
+                dto.getName(),
+                dto.getSurName(),
+                dto.getPatronymic(),
+                dto.getGender(),
+                dto.getEmail(),
+                dto.getPhoneNumber(),
+                dto.getBirthDate(),
+                dto.getSnils(),
+                dto.getAddress(),
+                dto.getInsurancePolicy()
+        );
+    }
 }

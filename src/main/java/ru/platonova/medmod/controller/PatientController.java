@@ -26,6 +26,11 @@ public class PatientController {
         return service.getById(id);
     }
 
+    @GetMapping("find/all")
+    public List<PatientDTO> findAll(){
+        return service.getAll();
+    }
+
     @GetMapping("find/employee/id")
     public List<PatientDTO> findPatientByEmployeeId(@RequestParam Long id){
         return service.getPatientByEmployeeId(id);

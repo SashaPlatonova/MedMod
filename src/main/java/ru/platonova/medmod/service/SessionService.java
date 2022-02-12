@@ -4,9 +4,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.platonova.medmod.DTO.SessionCategoryDTO;
 import ru.platonova.medmod.DTO.SessionDTO;
 import ru.platonova.medmod.entity.Session;
+import ru.platonova.medmod.entity.SessionCategory;
+import ru.platonova.medmod.repository.CategoryRepo;
 import ru.platonova.medmod.repository.SessionRepo;
 
 import java.util.ArrayList;
@@ -17,9 +21,15 @@ import java.util.Set;
 public class SessionService {
 
     private final SessionRepo sessionRepo;
+    private final CategoryRepo categoryRepo;
 
-    public SessionService(SessionRepo sessionRepo) {
+    public SessionService(SessionRepo sessionRepo, CategoryRepo categoryRepo) {
         this.sessionRepo = sessionRepo;
+        this.categoryRepo = categoryRepo;
+    }
+
+    public SessionDTO findById(Long id){
+        return SessionDTO.toModel(sessionRepo.findSessionById(id));
     }
 
     public List<SessionDTO> getByPatient(Long id){
@@ -89,6 +99,33 @@ public class SessionService {
             }
         }
         return resArray;
+    }
+
+    public void deleteSession(Long id){
+        sessionRepo.deleteById(id);
+    }
+
+    public SessionDTO addSession(SessionDTO dto){
+        return SessionDTO.toModel(sessionRepo.save(SessionDTO.toEntity(dto)));
+    }
+
+    public List<SessionCategoryDTO> getAllCatNames(){
+        List<SessionCategory> entities = (List<SessionCategory>) categoryRepo.findAll();
+        List<SessionCategoryDTO> models = new ArrayList<>();
+        for (SessionCategory entity : entities) {
+            models.add(SessionCategoryDTO.toModel(entity));
+        }
+        return models;
+    }
+
+    public Long addSessionId(SessionDTO session){
+        // session.setConclusion(session.getCategory().getStructure());
+        return sessionRepo.save(SessionDTO.toEntity(session)).getId();
+    }
+
+    public void updateSession(SessionDTO dto){
+
+        sessionRepo.save(SessionDTO.toEntity(dto));
     }
 
 }

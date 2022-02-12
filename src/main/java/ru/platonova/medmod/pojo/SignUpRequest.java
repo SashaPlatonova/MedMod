@@ -1,11 +1,12 @@
 package ru.platonova.medmod.pojo;
 
 import java.sql.Date;
+import java.util.Set;
 
 public class SignUpRequest {
     private String username;
     private Long personell;
-    private String role;
+    private Set<String> roles;
     private String password;
     private String name;
     private String surName;
@@ -27,12 +28,12 @@ public class SignUpRequest {
         this.personell = personell;
     }
 
-    public String getRole() {
-        return role;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public String getPassword() {

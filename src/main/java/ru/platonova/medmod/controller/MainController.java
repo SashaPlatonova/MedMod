@@ -9,10 +9,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class MainController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @GetMapping("employee/find/all")
+    public List<EmployeeDTO> getAll(){
+        return employeeService.all();
+    }
 
     @GetMapping("employee/find")
     public List<EmployeeDTO> getEmployee(@RequestParam String surname){

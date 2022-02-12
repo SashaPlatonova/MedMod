@@ -6,6 +6,8 @@ import ru.platonova.medmod.DTO.EmployeeDTO;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @SuppressWarnings("PMD")
@@ -43,15 +45,20 @@ public class Employee extends Person{
     @Column
     private String education;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roleId")
-    private EmployeeRole roleId;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "roleId")
+//    private EmployeeRole roleId;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 
     public Employee(Long id, String name, String surName, String patronymic, String gender,
                     String email, String phoneNumber, Date birthDate, Long personnelNum,
                     String username, String password, String experience, Department department,
-                    String qualification, String photo, String education, EmployeeRole roleId) {
+                    String qualification, String photo, String education) {
         super(id, name, surName, patronymic, gender, email, phoneNumber, birthDate);
         this.personnelNum = personnelNum;
         this.username = username;
@@ -61,7 +68,6 @@ public class Employee extends Person{
         this.qualification = qualification;
         this.photo = photo;
         this.education = education;
-        this.roleId = roleId;
     }
 
     public Employee(String username, String password, Long personnel,

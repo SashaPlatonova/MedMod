@@ -27,4 +27,6 @@ public interface SessionRepo extends CrudRepository<Session, Long> {
     @Query(value = "select * from session join session_cat sc " +
             "on session.category_id = sc.id where sc.name =:category", nativeQuery = true)
     List<Session> findByCategoryName(String category);
+
+    Session findSessionById(Long id);
 }

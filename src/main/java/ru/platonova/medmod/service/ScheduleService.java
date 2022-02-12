@@ -3,26 +3,27 @@ package ru.platonova.medmod.service;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
 import ru.platonova.medmod.DTO.Analysis;
+import ru.platonova.medmod.DTO.EmployeeDTO;
 import ru.platonova.medmod.DTO.ScheduleDTO;
 import ru.platonova.medmod.DTO.SessionDTO;
 import ru.platonova.medmod.entity.Patient;
 import ru.platonova.medmod.entity.Schedule;
 import ru.platonova.medmod.entity.Session;
 import ru.platonova.medmod.repository.ScheduleRepo;
+import ru.platonova.medmod.repository.SessionRepo;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ScheduleService {
     private final ScheduleRepo scheduleRepo;
+    private SessionRepo sessionRepo;
 
-    public ScheduleService(ScheduleRepo scheduleRepo) {
+    public ScheduleService(ScheduleRepo scheduleRepo, SessionRepo sessionRepo) {
         this.scheduleRepo = scheduleRepo;
+        this.sessionRepo = sessionRepo;
     }
 
     public List<ScheduleDTO> getForDay(String dateStr, Long id){
@@ -44,6 +45,15 @@ public class ScheduleService {
         return scheduleDTOS;
     }
 
+    public List<ScheduleDTO> getByEmployeeId(Long id){
+        List<Schedule> schedules = scheduleRepo.findAllByEmployeeID(id);
+        List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            scheduleDTOS.add(ScheduleDTO.toModel(schedule));
+        }
+        return scheduleDTOS;
+    }
+
     public List<ScheduleDTO> getForWeek(String surName){
 
         List<Schedule> schedules = scheduleRepo.findAllToWeek(surName);
@@ -57,12 +67,11 @@ public class ScheduleService {
     public List<ScheduleDTO> getLast(Long id){
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
         List<Schedule> schedules = scheduleRepo.findLastByEmployee(id);
-        Set<Patient> patientSet = new HashSet<>();
         for (Schedule schedule : schedules) {
-            if(!patientSet.contains(schedule.getSession().getPatient())){
-                patientSet.add(schedule.getSession().getPatient());
-                scheduleDTOS.add(ScheduleDTO.toModel(schedule));
-            }
+//            if(!patientSet.contains(schedule.getSession().getPatient())){
+//                patientSet.add(schedule.getSession().getPatient());
+            scheduleDTOS.add(ScheduleDTO.toModel(schedule));
+            //}
         }
 
         return scheduleDTOS;
@@ -76,14 +85,16 @@ public class ScheduleService {
         }
         for (ScheduleDTO scheduleDTO : scheduleDTOS) {
             SessionDTO model = scheduleDTO.getSession();
-            for (int i = 0; i<model.getConclusion().size(); i++){
-                JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
-                float indicatorValue = -1;
-                if(conclusion.has("Название")){
-                    indicatorValue = conclusion.get("Значение").getAsFloat();
-                    if(indicatorValue<conclusion.get("Минимально допустимое значение").getAsFloat() ||
-                            indicatorValue>conclusion.get("Максимальное допустимое значение").getAsFloat()) {
-                        conclusion.addProperty("Норма", false);
+            if(model.getConclusion()!=null) {
+                for (int i = 0; i < model.getConclusion().size(); i++) {
+                    JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
+                    float indicatorValue = -1;
+                    if (conclusion.has("Название")) {
+                        indicatorValue = conclusion.get("Значение").getAsFloat();
+                        if (indicatorValue < conclusion.get("Минимально допустимое значение").getAsFloat() ||
+                                indicatorValue > conclusion.get("Максимальное допустимое значение").getAsFloat()) {
+                            conclusion.addProperty("Норма", false);
+                        }
                     }
                 }
             }
@@ -114,5 +125,41 @@ public class ScheduleService {
             }
         }
         return analysis;
+    }
+
+    public ScheduleDTO addSessionToSchedule(Long id, Long session){
+        scheduleRepo.addSession(id, session);
+        return ScheduleDTO.toModel(scheduleRepo.findScheduleById(id));
+    }
+
+    public void update(ScheduleDTO dto){
+        Schedule schedule = new Schedule();
+        schedule.setId(dto.getId());
+        schedule.setDate(dto.getDate());
+        schedule.setEmployee(EmployeeDTO.toEntity(dto.getEmployee()));
+        if(dto.getSession()!=null) {
+            schedule.setSession(SessionDTO.toEntity(dto.getSession()));
+        }
+        else {
+            schedule.setSession(null);
+        }
+        scheduleRepo.save(schedule);
+    }
+
+    public ScheduleDTO findById(Long id){
+        return ScheduleDTO.toModel(scheduleRepo.findScheduleById(id));
+    }
+
+    public List<ScheduleDTO> findAllDateOrder() {
+        List<ScheduleDTO> dtos = new ArrayList<>();
+        List<Schedule> entities = (List<Schedule>) scheduleRepo.findAllOrderByDateDesc();
+        Set<Patient> patientSet = new HashSet<>();
+        for (Schedule entity : entities) {
+            if(!patientSet.contains(entity.getSession().getPatient())){
+                dtos.add(ScheduleDTO.toModel(entity));
+                patientSet.add(entity.getSession().getPatient());
+            }
+        }
+        return dtos;
     }
 }

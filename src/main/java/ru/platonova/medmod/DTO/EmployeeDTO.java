@@ -32,7 +32,7 @@ public class EmployeeDTO {
     private String qualification;
     private String education;
     private String photo;
-    private RoleDTO roleId;
+//    private RoleDTO roleId;
 
     public static Employee toEntity(EmployeeDTO model){
         return new Employee(
@@ -51,8 +51,7 @@ public class EmployeeDTO {
                 DepartmentDTO.toEntity(model.getDepartment()),
                 model.getQualification(),
                 model.getPhoto(),
-                model.getEducation(),
-                RoleDTO.toEntity(model.getRoleId())
+                model.getEducation()
         );
     }
 
@@ -63,7 +62,7 @@ public class EmployeeDTO {
                 employee.getExperience(),
                 DepartmentDTO.toModel(employee.getDepartment()),
                 employee.getQualification(), employee.getEducation(),
-                employee.getPhoto(), RoleDTO.toModel(employee.getRoleId()));
+                employee.getPhoto());
     }
 
 

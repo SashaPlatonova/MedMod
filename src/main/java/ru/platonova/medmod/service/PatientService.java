@@ -41,4 +41,13 @@ public class PatientService {
     public PatientDTO getPatient(String name, String surName, String patronymic){
         return PatientDTO.toModel(patientRepo.findByNameAndSurNameAndPatronymic(name, surName, patronymic));
     }
+
+    public List<PatientDTO> getAll(){
+        List<Patient> patients = (List<Patient>) patientRepo.findAll();
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        for (Patient patient : patients) {
+            patientDTOS.add(PatientDTO.toModel(patient));
+        }
+        return patientDTOS;
+    }
 }

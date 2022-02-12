@@ -24,10 +24,23 @@ public class SessionCategoryDTO {
         return g.fromJson(structure, JsonArray.class);
     }
 
+    public static String fromJsonToString(JsonArray json){
+        Gson g = new Gson();
+        return g.toJson(json);
+    }
+
     public static SessionCategoryDTO toModel(SessionCategory category){
         return new SessionCategoryDTO(category.getId(),
                 category.getName(),
                 toJson(category.getStructure())
+        );
+    }
+
+    public static SessionCategory toEntity(SessionCategoryDTO dto){
+        return new SessionCategory(
+                dto.getId(),
+                dto.getName(),
+                fromJsonToString(dto.getStructure())
         );
     }
 

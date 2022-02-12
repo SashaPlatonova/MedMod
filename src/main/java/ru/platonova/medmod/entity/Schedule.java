@@ -22,9 +22,6 @@ public class Schedule {
     @Column(nullable = false)
     private Date date;
 
-    @Column
-    private Time time;
-
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;

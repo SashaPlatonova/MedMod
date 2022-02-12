@@ -43,6 +43,16 @@ public class EmployeeService {
         return employeeDTOS;
     }
 
+    public List<EmployeeDTO> all(){
+        List<Employee> employees = (List<Employee>) employeeRepo.findAll();
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        for (Employee employee : employees) {
+            employeeDTOS.add(EmployeeDTO.toModel(employee));
+        }
+
+        return employeeDTOS;
+    }
+
     public boolean updateEmployee(EmployeeDTO model){
         Employee emp = employeeRepo.findEmployeeById(model.getId());
         if(emp==null){

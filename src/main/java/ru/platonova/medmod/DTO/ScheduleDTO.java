@@ -22,7 +22,6 @@ public class ScheduleDTO {
         ScheduleDTO model = new ScheduleDTO();
         model.setId(schedule.getId());
         model.setDate(schedule.getDate());
-        model.setTime(schedule.getTime());
         model.setEmployee(EmployeeDTO.toModel(schedule.getEmployee()));
         if(schedule.getSession()!=null){
             model.setSession(SessionDTO.toModel(schedule.getSession()));

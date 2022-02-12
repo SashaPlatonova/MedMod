@@ -17,7 +17,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('physician') or hasRole('nurse')")
+//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public String userAccess() {
         return "user API";
     }

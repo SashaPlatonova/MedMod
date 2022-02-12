@@ -10,8 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.platonova.medmod.config.jwt.JwtUtils;
+import ru.platonova.medmod.entity.ERole;
 import ru.platonova.medmod.entity.Employee;
 import ru.platonova.medmod.entity.EmployeeRole;
+import ru.platonova.medmod.entity.Role;
 import ru.platonova.medmod.pojo.JwtResponse;
 import ru.platonova.medmod.pojo.MessageResponse;
 import ru.platonova.medmod.pojo.SignInRequest;
@@ -20,7 +22,9 @@ import ru.platonova.medmod.repository.EmployeeRepo;
 import ru.platonova.medmod.repository.RoleRepo;
 import ru.platonova.medmod.service.EmployeeDetailsImpl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,7 +66,7 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles.get(0)));
+                roles));
     }
 
     @PostMapping("/signup")
@@ -80,35 +84,34 @@ public class AuthController {
                 signupRequest.getName(), signupRequest.getSurName(), signupRequest.getPhone(),
                 signupRequest.getGender(), signupRequest.getBirthDate());
 
-        String reqRoles = signupRequest.getRole();
-        EmployeeRole role;
+        Set<String> reqRoles = signupRequest.getRoles();
+        Set<Role> roles = new HashSet<>();
 
         if (reqRoles == null) {
-            EmployeeRole employeeRole = roleRepo.findByRoleName("ROLE_physician")
-                    .orElseThrow(()->new UsernameNotFoundException("No such role"));
-            role = employeeRole;
-
+            Role userRole = roleRepo
+                    .findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
+            roles.add(userRole);
         } else {
-                switch (reqRoles) {
-                    case "physician":
-                        EmployeeRole physicianRole = roleRepo.findByRoleName("ROLE_physician")
-                                .orElseThrow(()->new UsernameNotFoundException("No such role"));
-                        role = physicianRole;
+            reqRoles.forEach(r -> {
+                switch (r) {
+                    case "mod":
+                        Role modRole = roleRepo
+                                .findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error, Role MODERATOR is not found"));
+                        roles.add(modRole);
 
-                        break;
-                    case "nurse":
-                        EmployeeRole nurseRole = roleRepo.findByRoleName("ROLE_nurse")
-                                .orElseThrow(()->new UsernameNotFoundException("No such role"));
-                        role = nurseRole;
                         break;
 
                     default:
-                        EmployeeRole employeeRole = roleRepo.findByRoleName("ROLE_nurse")
-                                .orElseThrow(()->new UsernameNotFoundException("No such role"));
-                        role = employeeRole;
+                        Role userRole = roleRepo
+                                .findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
+                        roles.add(userRole);
                 }
+            });
         }
-        user.setRoleId(role);
+        user.setRoles(roles);
         employeeRepo.save(user);
         return ResponseEntity.ok(new MessageResponse("User CREATED"));
     }

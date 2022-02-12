@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class EmployeeDetailsImpl implements UserDetails {
 
@@ -32,8 +33,9 @@ public class EmployeeDetailsImpl implements UserDetails {
     }
 
     public static EmployeeDetailsImpl build(Employee employee){
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(employee.getRoleId().getRoleName()));
+        List<GrantedAuthority> authorities = employee.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
         return new EmployeeDetailsImpl(employee.getId(),
                 employee.getUsername(), employee.getEmail(), employee.getPassword(), authorities);
     }
