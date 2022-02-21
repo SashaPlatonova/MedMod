@@ -22,4 +22,11 @@ public class DiagnosisDTO {
                 StandartDTO.toModel(diagnosis.getStandart())
         );
     }
+
+    public static Diagnosis toEntity(DiagnosisDTO dto){
+        return new Diagnosis(dto.getId(),
+        dto.getName(),
+                dto.getCode(),
+                StandartDTO.toEntity(dto.getStandart()));
+    }
 }

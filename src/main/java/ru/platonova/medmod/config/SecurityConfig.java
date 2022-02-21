@@ -62,7 +62,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/document/**").authenticated()
                 .antMatchers("/api/patient/**").authenticated()
                 .antMatchers("api/department/**").authenticated();
-                //.anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

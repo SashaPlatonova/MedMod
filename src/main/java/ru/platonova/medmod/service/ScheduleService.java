@@ -93,7 +93,10 @@ public class ScheduleService {
                         indicatorValue = conclusion.get("Значение").getAsFloat();
                         if (indicatorValue < conclusion.get("Минимально допустимое значение").getAsFloat() ||
                                 indicatorValue > conclusion.get("Максимальное допустимое значение").getAsFloat()) {
-                            conclusion.addProperty("Норма", false);
+                            conclusion.addProperty("Норма", "нет");
+                        }
+                        else {
+                            conclusion.addProperty("Норма", "да");
                         }
                     }
                 }

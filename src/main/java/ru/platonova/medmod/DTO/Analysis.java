@@ -11,7 +11,7 @@ public class Analysis {
     private float maxValueFemale;
     private Date date;
 
-    public Analysis(String name, float value, float minValue, float maxValue, float maxValueFemale, float minValueFemale, Date date) {
+    public Analysis(String name, float value, float minValue, float maxValue, float minValueFemale, float maxValueFemale, Date date) {
         this.name = name;
         this.value = value;
         this.minValue = minValue;

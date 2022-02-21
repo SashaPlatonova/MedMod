@@ -15,4 +15,8 @@ public class StandartDTO {
     public static StandartDTO toModel(DocStandart standart){
         return new StandartDTO(standart.getId(), standart.getDocName());
     }
+
+    public static DocStandart toEntity(StandartDTO dto){
+        return new DocStandart(dto.getId(), dto.getDocName());
+    }
 }

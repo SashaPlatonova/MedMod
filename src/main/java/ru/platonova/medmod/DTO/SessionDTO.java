@@ -65,7 +65,7 @@ public class SessionDTO {
         }
         session.setSessionName(dto.getSessionName());
         if(dto.getDiagnosis()!=null){
-            session.setDiagnosis(session.getDiagnosis());
+            session.setDiagnosis(DiagnosisDTO.toEntity(dto.getDiagnosis()));
         }
         else {
             session.setDiagnosis(null);
