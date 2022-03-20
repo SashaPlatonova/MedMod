@@ -6,21 +6,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.platonova.medmod.config.jwt.JwtUtils;
 import ru.platonova.medmod.entity.ERole;
 import ru.platonova.medmod.entity.Employee;
-import ru.platonova.medmod.entity.EmployeeRole;
 import ru.platonova.medmod.entity.Role;
-import ru.platonova.medmod.pojo.JwtResponse;
-import ru.platonova.medmod.pojo.MessageResponse;
-import ru.platonova.medmod.pojo.SignInRequest;
-import ru.platonova.medmod.pojo.SignUpRequest;
+import ru.platonova.medmod.pojo.*;
 import ru.platonova.medmod.repository.EmployeeRepo;
 import ru.platonova.medmod.repository.RoleRepo;
 import ru.platonova.medmod.service.EmployeeDetailsImpl;
+import ru.platonova.medmod.service.EmployeeService;
 
 import java.util.HashSet;
 import java.util.List;
@@ -46,6 +42,9 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    EmployeeService service;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authUser(@RequestBody SignInRequest signInRequest) {
 
@@ -56,7 +55,6 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
         EmployeeDetailsImpl userDetails = (EmployeeDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
@@ -67,6 +65,21 @@ public class AuthController {
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateRequest request) {
+        System.out.println(request.toString());
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        request.getSignInRequest().getUsername(),
+                        request.getSignInRequest().getPassword()));
+        System.out.println(authentication.isAuthenticated());
+        if(authentication.isAuthenticated()) {
+            request.getEmpl().setPassword(passwordEncoder.encode(request.getEmpl().getPassword()));
+            System.out.println(service.updateEmployee(request.getEmpl()));
+        }
+        return ResponseEntity.ok().body(new MessageResponse("Данные успешно изменены"));
     }
 
     @PostMapping("/signup")

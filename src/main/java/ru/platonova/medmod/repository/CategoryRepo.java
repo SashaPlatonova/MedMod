@@ -6,5 +6,4 @@ import ru.platonova.medmod.entity.SessionCategory;
 
 @Repository
 public interface CategoryRepo extends CrudRepository<SessionCategory, Long> {
-
 }

@@ -119,7 +119,7 @@ public class SessionService {
     }
 
     public Long addSessionId(SessionDTO session){
-         session.setConclusion(session.getCategory().getStructure());
+//         session.setConclusion(session.getCategory().getStructure());
         return sessionRepo.save(SessionDTO.toEntity(session)).getId();
     }
 

@@ -70,4 +70,10 @@ public class ScheduleController {
     public ScheduleDTO addSession(@RequestParam Long id, @RequestParam Long session){
       return service.addSessionToSchedule(id, session);
     }
+
+    @GetMapping("find/prescription")
+    public List<String> getPrescription(@RequestParam Long id) {
+        return service.getPrescription(id);
+    }
+
 }

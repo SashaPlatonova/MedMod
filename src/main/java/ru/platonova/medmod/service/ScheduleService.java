@@ -90,13 +90,14 @@ public class ScheduleService {
                     JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
                     float indicatorValue = -1;
                     if (conclusion.has("Название")) {
-                        indicatorValue = conclusion.get("Значение").getAsFloat();
-                        if (indicatorValue < conclusion.get("Минимально допустимое значение").getAsFloat() ||
-                                indicatorValue > conclusion.get("Максимальное допустимое значение").getAsFloat()) {
-                            conclusion.addProperty("Норма", "нет");
-                        }
-                        else {
-                            conclusion.addProperty("Норма", "да");
+                        if(!conclusion.get("Значение").getAsString().isEmpty()) {
+                            indicatorValue = conclusion.get("Значение").getAsFloat();
+                            if (indicatorValue < conclusion.get("Минимально допустимое значение").getAsFloat() ||
+                                    indicatorValue > conclusion.get("Максимальное допустимое значение").getAsFloat()) {
+                                conclusion.addProperty("Норма", "нет");
+                            } else {
+                                conclusion.addProperty("Норма", "да");
+                            }
                         }
                     }
                 }
@@ -110,19 +111,21 @@ public class ScheduleService {
         List<ScheduleDTO> schedules = this.getByPatient(id);
         for (ScheduleDTO schedule : schedules) {
             SessionDTO model = schedule.getSession();
-            for (int i = 0; i<model.getConclusion().size(); i++){
-                JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
-                if(conclusion.has("Название")) {
-                    if (conclusion.get("Название").getAsString().equals(name)) {
-                        analysis.add(new Analysis(
-                                conclusion.get("Название").getAsString(),
-                                conclusion.get("Значение").getAsFloat(),
-                                conclusion.get("Минимально допустимое значение").getAsFloat(),
-                                conclusion.get("Максимальное допустимое значение").getAsFloat(),
-                                conclusion.get("Минимально допустимое значение (Жен)").getAsFloat(),
-                                conclusion.get("Максимальное допустимое значение (Жен)").getAsFloat(),
-                                schedule.getDate()
-                        ));
+            if(model.getConclusion()!=null) {
+                for (int i = 0; i < model.getConclusion().size(); i++) {
+                    JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
+                    if (conclusion.has("Название")) {
+                        if (conclusion.get("Название").getAsString().equals(name)) {
+                            analysis.add(new Analysis(
+                                    conclusion.get("Название").getAsString(),
+                                    conclusion.get("Значение").getAsFloat(),
+                                    conclusion.get("Минимально допустимое значение").getAsFloat(),
+                                    conclusion.get("Максимальное допустимое значение").getAsFloat(),
+                                    conclusion.get("Минимально допустимое значение (Жен)").getAsFloat(),
+                                    conclusion.get("Максимальное допустимое значение (Жен)").getAsFloat(),
+                                    schedule.getDate()
+                            ));
+                        }
                     }
                 }
             }
@@ -164,5 +167,26 @@ public class ScheduleService {
             }
         }
         return dtos;
+    }
+
+    public List<String> getPrescription(Long id) {
+        List<String> prescriptions = new ArrayList<>();
+        List<ScheduleDTO> schedules = this.getByPatient(id);
+        for (ScheduleDTO schedule : schedules) {
+            SessionDTO model = schedule.getSession();
+            if (model.getConclusion() != null) {
+                for (int i = 0; i < model.getConclusion().size(); i++) {
+                    JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
+                    if (conclusion.has("Название поля")) {
+                        if(conclusion.get("Название поля").getAsString().equals("Назначения") &&
+                                !conclusion.get("Значение").getAsString().isEmpty()){
+                            prescriptions.add(conclusion.get("Значение").getAsString() + "; Дата " + schedule.getDate());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return prescriptions;
     }
 }
