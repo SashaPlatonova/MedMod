@@ -45,9 +45,6 @@ public class Employee extends Person{
     @Column
     private String education;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "roleId")
-//    private EmployeeRole roleId;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),

@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.platonova.medmod.DTO.EmployeeDTO;
 import ru.platonova.medmod.config.jwt.JwtUtils;
 import ru.platonova.medmod.entity.ERole;
 import ru.platonova.medmod.entity.Employee;
@@ -47,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authUser(@RequestBody SignInRequest signInRequest) {
-
+        System.out.println(passwordEncoder.encode(signInRequest.getPassword()));
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         signInRequest.getUsername(),
@@ -69,17 +70,42 @@ public class AuthController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UpdateRequest request) {
-        System.out.println(request.toString());
+        System.out.println(request.getEmpl().getPassword());
+        System.out.println(request.getSignInRequest().getPassword());
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         request.getSignInRequest().getUsername(),
                         request.getSignInRequest().getPassword()));
         System.out.println(authentication.isAuthenticated());
         if(authentication.isAuthenticated()) {
-            request.getEmpl().setPassword(passwordEncoder.encode(request.getEmpl().getPassword()));
-            System.out.println(service.updateEmployee(request.getEmpl()));
+            if(!request.getEmpl().getPassword().isEmpty()) {
+                request.getEmpl().setPassword(passwordEncoder.encode(request.getEmpl().getPassword()));
+            }
+            else {
+                request.getEmpl().setPassword(passwordEncoder.encode(request.getSignInRequest().getPassword()));
+            }
+            Set<Role> roles = new HashSet<>();
+            Role userRole = roleRepo
+                    .findByName(ERole.ROLE_USER).orElseThrow(() -> new RuntimeException("Error, Role USER is not found"));
+            roles.add(userRole);
+            Employee user = EmployeeDTO.toEntity(request.getEmpl());
+            user.setRoles(roles);
+            System.out.println(employeeRepo.save(user));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            EmployeeDetailsImpl userDetails = (EmployeeDetailsImpl) authentication.getPrincipal();
+            List<String> role = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+            System.out.println(jwt);
+            System.out.println(userDetails.getUsername());
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    role));
         }
-        return ResponseEntity.ok().body(new MessageResponse("Данные успешно изменены"));
+        return ResponseEntity.badRequest().body(new MessageResponse("Ошибка обновления данных, неверно введен пароль"));
     }
 
     @PostMapping("/signup")

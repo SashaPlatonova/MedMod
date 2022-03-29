@@ -35,9 +35,4 @@ public class MainController {
         return employeeService.getEmployeeByDepartment(department);
     }
 
-    @PutMapping("employee/update")
-    public boolean updateEmployee(@RequestBody EmployeeDTO model){
-        return employeeService.updateEmployee(model);
-    }
-
 }
