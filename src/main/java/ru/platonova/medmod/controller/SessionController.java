@@ -43,6 +43,11 @@ public class SessionController {
         return service.getAnalysisChanges(id, name);
     }
 
+    @GetMapping("media")
+    public List<String> getMediaLinks(@RequestParam Long id){
+        return service.getMedia(id);
+    }
+
     @GetMapping("all/categories")
     public List<SessionCategoryDTO> getAll(){
         return service.getAllCatNames();

@@ -53,7 +53,7 @@ public interface ScheduleRepo extends CrudRepository<Schedule, Long> {
     @Query(value = """
     select * from schedule inner join session s on s.id = schedule.session_id 
     left join diagnosis d on d.id = s.diagnosis_id 
-    inner join patient p on p.id = s.patient_id order by date desc;
+    inner join patient p on p.id = s.patient_id where s.conclusion IS NOT NULL order by date desc;
     """, nativeQuery = true)
     List<Schedule> findAllOrderByDateDesc();
 

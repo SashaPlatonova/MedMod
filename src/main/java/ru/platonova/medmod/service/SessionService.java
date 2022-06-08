@@ -14,6 +14,7 @@ import ru.platonova.medmod.repository.CategoryRepo;
 import ru.platonova.medmod.repository.SessionRepo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -116,6 +117,23 @@ public class SessionService {
             models.add(SessionCategoryDTO.toModel(entity));
         }
         return models;
+    }
+
+    public List<String> getMedia(Long id){
+        Session session = sessionRepo.findSessionById(id);
+        SessionDTO model = SessionDTO.toModel(session);
+        List<String> links = new ArrayList<>();
+        if(model.getConclusion()!=null) {
+            for (int i = 0; i < model.getConclusion().size(); i++) {
+                JsonObject conclusion = model.getConclusion().get(i).getAsJsonObject();
+                if (conclusion.has("Название поля")) {
+                    if(conclusion.get("Название поля").getAsString().equals("Материалы")) {
+                        links = Arrays.asList(conclusion.get("Значение").getAsString().split(","));
+                    }
+                }
+            }
+        }
+        return links;
     }
 
     public Long addSessionId(SessionDTO session){

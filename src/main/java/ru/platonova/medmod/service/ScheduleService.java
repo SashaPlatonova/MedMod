@@ -79,6 +79,12 @@ public class ScheduleService {
 
     public List<ScheduleDTO> getByPatient(Long id){
         List<Schedule> schedules = scheduleRepo.findByPatient(id);
+        Collections.sort(schedules, new Comparator<Schedule>() {
+            @Override
+            public int compare(Schedule o1, Schedule o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
         List<ScheduleDTO> scheduleDTOS = new ArrayList<>();
         for (Schedule schedule : schedules) {
             scheduleDTOS.add(ScheduleDTO.toModel(schedule));
@@ -162,8 +168,10 @@ public class ScheduleService {
         Set<Patient> patientSet = new HashSet<>();
         for (Schedule entity : entities) {
             if(!patientSet.contains(entity.getSession().getPatient())){
-                dtos.add(ScheduleDTO.toModel(entity));
-                patientSet.add(entity.getSession().getPatient());
+                if(entity.getSession().getConclusion()!=null) {
+                    dtos.add(ScheduleDTO.toModel(entity));
+                    patientSet.add(entity.getSession().getPatient());
+                }
             }
         }
         return dtos;
